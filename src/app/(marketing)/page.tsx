@@ -4,7 +4,6 @@ import { ProblemSection } from "@/components/sections/ProblemSection";
 import { DashboardShowcase } from "@/components/sections/DashboardShowcase";
 import { ModulesGrid } from "@/components/sections/ModulesGrid";
 import { Testimonials } from "@/components/sections/Testimonials";
-import { CTASection } from "@/components/sections/CTASection";
 
 export default function MarketingPage() {
   return (
@@ -21,7 +20,6 @@ export default function MarketingPage() {
       
       <ModulesGrid />
       <Testimonials />
-      <CTASection />
     </main>
   );
 }
