@@ -24,8 +24,8 @@ export function FaqAndCta() {
           
           {/* Left Column: FAQ */}
           <div>
-            <h2 className="text-3xl font-bold text-foreground mb-8">Frequently Asked Questions</h2>
-            <Accordion type="single" collapsible className="w-full">
+  <h2 className="text-3xl font-bold text-foreground mb-8">Frequently Asked Questions</h2>
+  <Accordion type="single" collapsible className="w-full">
               {FAQS.map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`} className="border-border">
                   <AccordionTrigger className="text-left font-medium hover:text-primary-600 transition-colors">
