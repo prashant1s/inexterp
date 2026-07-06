@@ -12,7 +12,6 @@ export default function MarketingPage() {
       <TrustedLogos />
       <ProblemSection />
       <DashboardShowcase />
-      
       <ModulesGrid />
       <Testimonials />
     </main>

@@ -1,18 +1,40 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { useState } from "react";
+import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
-  { name: "Products", hasDropdown: true },
-  { name: "Industries", hasDropdown: true },
-  { name: "Modules", hasDropdown: false },
-  { name: "Resources", hasDropdown: true },
-  { name: "Pricing", hasDropdown: false },
+  { 
+    name: "Products", 
+    href: "/products",
+    dropdown: [
+      { name: "Inventory Management", href: "/products/inventory-management" },
+      { name: "Points of Sale", href: "/products/points-of-sale" },
+      { name: "Accounts", href: "/products/accounts" },
+      { name: "Manufacturing", href: "/products/manufacturing" },
+      { name: "CRM", href: "/products/crm" },
+      { name: "HRM", href: "/products/hrm" },
+      { name: "Integrations", href: "/products/integrations" },
+    ]
+  },
+  { 
+    name: "Services", 
+    href: "/services",
+    dropdown: [
+      { name: "IT Hardware", href: "/services/it-hardware" },
+      { name: "Consumables Items", href: "/services/consumables-items" },
+      { name: "Cloud Service", href: "/services/cloud-service" },
+      { name: "Software / ERP", href: "/services/software-erp" },
+    ]
+  },
+  { name: "Industries", href: "/industries", dropdown: [] }, // Empty array acts as placeholder for future dropdowns
+  { name: "Modules", href: "/modules" },
+  { name: "Resources", href: "/resources", dropdown: [] },
+  { name: "Pricing", href: "/pricing" },
 ];
 
 export function Navbar() {
@@ -50,12 +72,32 @@ export function Navbar() {
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-8">
           {NAV_LINKS.map((link) => (
-            <div key={link.name} className="relative group cursor-pointer flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              {link.name}
-              {link.hasDropdown && <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />}
+            <div key={link.name} className="relative group cursor-pointer flex items-center gap-1 py-4">
+              <Link 
+                href={link.href || "#"} 
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+              >
+                {link.name}
+                {link.dropdown && <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />}
+              </Link>
               
               {/* Animated Underline */}
-              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-primary-500 transition-all group-hover:w-full" />
+              <span className="absolute bottom-3 left-0 w-0 h-[2px] bg-primary-500 transition-all group-hover:w-full" />
+
+              {/* Desktop Dropdown Menu */}
+              {link.dropdown && link.dropdown.length > 0 && (
+                <div className="absolute top-full left-0 mt-0 w-64 bg-white dark:bg-surface-950 border border-border rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 flex flex-col py-2 z-50">
+                  {link.dropdown.map((subLink) => (
+                    <Link 
+                      key={subLink.name} 
+                      href={subLink.href}
+                      className="px-4 py-2 text-sm text-muted-foreground hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-950 transition-colors"
+                    >
+                      {subLink.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </nav>
@@ -82,12 +124,57 @@ export function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Menu (simplified for brevity) */}
-      {mobileMenuOpen && (
-        <div className="absolute top-full left-0 w-full bg-white dark:bg-surface-950 border-b border-border shadow-lg p-4 flex flex-col gap-4 lg:hidden">
-           {/* Mobile links and buttons would go here */}
-        </div>
-      )}
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="absolute top-full left-0 w-full bg-white dark:bg-surface-950 border-b border-border shadow-lg lg:hidden overflow-hidden"
+          >
+            <div className="p-4 flex flex-col gap-4 max-h-[70vh] overflow-y-auto custom-scrollbar">
+              {NAV_LINKS.map((link) => (
+                <div key={link.name} className="flex flex-col gap-2">
+                  <Link 
+                    href={link.href || "#"} 
+                    className="text-base font-semibold text-foreground flex justify-between items-center"
+                    onClick={() => !link.dropdown && setMobileMenuOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                  
+                  {/* Mobile Sub-links */}
+                  {link.dropdown && link.dropdown.length > 0 && (
+                    <div className="flex flex-col gap-2 pl-4 border-l-2 border-border mt-1">
+                      {link.dropdown.map((subLink) => (
+                        <Link
+                          key={subLink.name}
+                          href={subLink.href}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="text-sm text-muted-foreground hover:text-primary-600 py-1"
+                        >
+                          {subLink.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              <div className="border-t border-border mt-4 pt-4 flex flex-col gap-4">
+                <div className="text-sm font-medium text-muted-foreground flex items-center justify-between">
+                  <span>Sales Contact:</span>
+                  <span className="text-foreground">+91 98765 43210</span>
+                </div>
+                <Button className="w-full">
+                  Book Free Demo
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }
