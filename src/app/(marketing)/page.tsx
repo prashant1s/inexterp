@@ -8,14 +8,9 @@ import { Testimonials } from "@/components/sections/Testimonials";
 export default function MarketingPage() {
   return (
     <main className="flex flex-col items-center w-full overflow-hidden">
-      {/* Each section handles its own internal layout, padding, and responsiveness.
-        We pass server-side fetched data or constants down to them if necessary.
-      */}
       <Hero />
       <TrustedLogos />
       <ProblemSection />
-      
-      {/* Solution & Showcase combined for seamless transition */}
       <DashboardShowcase />
       
       <ModulesGrid />
